@@ -1,4 +1,5 @@
-import { Command } from './command.interface.ts';
+import chalk from 'chalk';
+import { Command } from './command.interface.js';
 
 export class HelpCommand implements Command {
   public getName(): string {
@@ -7,13 +8,15 @@ export class HelpCommand implements Command {
 
   public async execute(): Promise<void> {
     console.info(`
-        CLI для генерации данных
-        Пример:
-            main.cli.js --<command> [--arguments]
-        Команды:
-            --version:                   # выводит номер версии
-            --help:                      # печатает этот текст
-            --import <path>:             # импортирует данные из TSV
+        ${chalk.bold.cyan('CLI для генерации данных')}
+
+        ${chalk.bold('Пример:')}
+            main.cli.js ${chalk.cyan('--<command>')} ${chalk.yellow('[--arguments]')}
+
+        ${chalk.bold('Команды:')}
+            ${chalk.green('--version:')}                   ${chalk.gray('# выводит номер версии')}
+            ${chalk.green('--help:')}                      ${chalk.gray('# печатает этот текст')}
+            ${chalk.green('--import')} ${chalk.yellow('<path>')}:             ${chalk.gray('# импортирует данные из TSV')}
     `);
   }
 }

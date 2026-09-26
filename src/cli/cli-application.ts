@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import { Command } from './commands/command.interface.js';
 import { CommandParser } from './command-parser.js';
 
@@ -15,7 +16,7 @@ export class CLIApplication {
       const commandName = command.getName();
 
       if (Object.hasOwn(this.commands, commandName)) {
-        throw new Error(`Команда ${commandName} уже зарегистрирована.`);
+        throw new Error(chalk.red(`Команда ${commandName} уже зарегистрирована.`));
       }
 
       this.commands[commandName] = command;
@@ -28,7 +29,7 @@ export class CLIApplication {
 
   public getDefaultCommand(): Command | never {
     if (!this.commands[this.defaultCommand]) {
-      throw new Error(`Команда по умолчанию (${this.defaultCommand}) не зарегистрирована.`);
+      throw new Error(chalk.red(`Команда по умолчанию (${this.defaultCommand}) не зарегистрирована.`));
     }
 
     return this.commands[this.defaultCommand];
