@@ -1,28 +1,26 @@
-import chalk from 'chalk';
-import { Command } from './command.interface.js';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import chalk from "chalk";
+import { Command } from "./command.interface.js";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 type PackageJSONConfig = {
   version: string;
-}
+};
 
 function isPackageJSONConfig(val: unknown): val is PackageJSONConfig {
   return (
-    typeof val === 'object' &&
+    typeof val === "object" &&
     val !== null &&
     !Array.isArray(val) &&
-    Object.hasOwn(val, 'version')
+    Object.hasOwn(val, "version")
   );
 }
 
 export class VersionCommand implements Command {
-  constructor(
-    private readonly filePath: string = './package.json'
-  ) { }
+  constructor(private readonly filePath: string = "./package.json") {}
 
   public getName(): string {
-    return '--version';
+    return "--version";
   }
 
   public async execute(): Promise<void> {
@@ -30,7 +28,9 @@ export class VersionCommand implements Command {
       const version = this.readVersion();
       console.info(chalk.green.bold(version));
     } catch (err: unknown) {
-      console.error(chalk.red(`Не удалось прочитать версию из файла ${this.filePath}.`));
+      console.error(
+        chalk.red(`Не удалось прочитать версию из файла ${this.filePath}.`),
+      );
       if (err instanceof Error) {
         console.error(chalk.red(err.message));
       }
@@ -38,11 +38,11 @@ export class VersionCommand implements Command {
   }
 
   private readVersion(): string {
-    const jsonContent = readFileSync(resolve(this.filePath), 'utf-8');
+    const jsonContent = readFileSync(resolve(this.filePath), "utf-8");
     const importedContent: unknown = JSON.parse(jsonContent);
 
     if (!isPackageJSONConfig(importedContent)) {
-      throw new Error('Не удалось распарсить содержимое JSON.');
+      throw new Error("Не удалось распарсить содержимое JSON.");
     }
 
     return importedContent.version;

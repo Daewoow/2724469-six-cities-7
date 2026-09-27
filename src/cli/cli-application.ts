@@ -1,13 +1,11 @@
-import chalk from 'chalk';
-import { Command } from './commands/command.interface.js';
-import { CommandParser } from './command-parser.js';
+import chalk from "chalk";
+import { Command } from "./commands/command.interface.js";
+import { CommandParser } from "./command-parser.js";
 
 type CommandCollection = Record<string, Command>;
 
 export class CLIApplication {
-  constructor (
-    private readonly defaultCommand: string = '--help'
-  ) {}
+  constructor(private readonly defaultCommand: string = "--help") {}
 
   private commands: CommandCollection = {};
 
@@ -16,7 +14,9 @@ export class CLIApplication {
       const commandName = command.getName();
 
       if (Object.hasOwn(this.commands, commandName)) {
-        throw new Error(chalk.red(`Команда ${commandName} уже зарегистрирована.`));
+        throw new Error(
+          chalk.red(`Команда ${commandName} уже зарегистрирована.`),
+        );
       }
 
       this.commands[commandName] = command;
@@ -29,7 +29,11 @@ export class CLIApplication {
 
   public getDefaultCommand(): Command | never {
     if (!this.commands[this.defaultCommand]) {
-      throw new Error(chalk.red(`Команда по умолчанию (${this.defaultCommand}) не зарегистрирована.`));
+      throw new Error(
+        chalk.red(
+          `Команда по умолчанию (${this.defaultCommand}) не зарегистрирована.`,
+        ),
+      );
     }
 
     return this.commands[this.defaultCommand];

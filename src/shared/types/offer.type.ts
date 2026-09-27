@@ -1,8 +1,8 @@
-import { CityName } from './city-name.enum.js';
-import { HousingType } from './housing-type.enum.js';
-import { Amenity } from './amenity.enum.js';
-import { User } from './user.type.js';
-import { Coordinates } from './coordinates.type.js';
+import { CityName } from "./city-name.enum.js";
+import { HousingType } from "./housing-type.enum.js";
+import { Amenity } from "./amenity.enum.js";
+import { User } from "./user.type.js";
+import { Coordinates } from "./coordinates.type.js";
 
 export type Offer = {
   title: string;
@@ -22,4 +22,4 @@ export type Offer = {
   author: User;
   commentCount: number;
   coordinates: Coordinates;
-}
+};

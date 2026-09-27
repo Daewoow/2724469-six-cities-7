@@ -1,10 +1,10 @@
-import chalk from 'chalk';
-import { Command } from './command.interface.js';
-import { TSVFileReader } from '../../shared/libs/file-reader/index.js';
+import chalk from "chalk";
+import { Command } from "./command.interface.js";
+import { TSVFileReader } from "../../shared/libs/file-reader/index.js";
 
 export class ImportCommand implements Command {
   public getName(): string {
-    return '--import';
+    return "--import";
   }
 
   public execute(...parameters: string[]): void {
@@ -18,7 +18,9 @@ export class ImportCommand implements Command {
       if (!(err instanceof Error)) {
         throw err;
       }
-      console.error(chalk.red(`Не удалось импортировать данные из файла: ${filename}`));
+      console.error(
+        chalk.red(`Не удалось импортировать данные из файла: ${filename}`),
+      );
       console.error(chalk.red(`Детали: ${err.message}`));
     }
   }
