@@ -5,7 +5,7 @@ import { resolve } from 'node:path';
 
 type PackageJSONConfig = {
   version: string;
-}
+};
 
 function isPackageJSONConfig(val: unknown): val is PackageJSONConfig {
   return (
@@ -17,9 +17,7 @@ function isPackageJSONConfig(val: unknown): val is PackageJSONConfig {
 }
 
 export class VersionCommand implements Command {
-  constructor(
-    private readonly filePath: string = './package.json'
-  ) { }
+  constructor(private readonly filePath: string = './package.json') {}
 
   public getName(): string {
     return '--version';
@@ -30,7 +28,9 @@ export class VersionCommand implements Command {
       const version = this.readVersion();
       console.info(chalk.green.bold(version));
     } catch (err: unknown) {
-      console.error(chalk.red(`Не удалось прочитать версию из файла ${this.filePath}.`));
+      console.error(
+        chalk.red(`Не удалось прочитать версию из файла ${this.filePath}.`),
+      );
       if (err instanceof Error) {
         console.error(chalk.red(err.message));
       }

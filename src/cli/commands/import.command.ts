@@ -18,7 +18,9 @@ export class ImportCommand implements Command {
       if (!(err instanceof Error)) {
         throw err;
       }
-      console.error(chalk.red(`Не удалось импортировать данные из файла: ${filename}`));
+      console.error(
+        chalk.red(`Не удалось импортировать данные из файла: ${filename}`),
+      );
       console.error(chalk.red(`Детали: ${err.message}`));
     }
   }

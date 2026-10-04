@@ -6,4 +6,4 @@ export type User = {
   avatarPath?: string;
   password: string;
   type: UserType;
-}
+};
