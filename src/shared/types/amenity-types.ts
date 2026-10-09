@@ -6,8 +6,12 @@ const amenities = [
   'Washer',
   'Towels',
   'Fridge',
-];
+] as const;
 export type Amenity = (typeof amenities)[number];
+
+export function getAllAmenities(): Amenity[] {
+  return [...amenities];
+}
 
 export function isAmenity(str: string): Amenity | undefined {
   const foundStr = amenities.find((val) => val === str);

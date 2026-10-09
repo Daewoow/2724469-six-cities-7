@@ -8,6 +8,7 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
+    "strictPropertyInitialization": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
@@ -24,7 +25,8 @@
       "node",
     ],
     "lib": [
-      "ESNext"
+      "ESNext",
+      "DOM"
     ]
   },
   "include": [
