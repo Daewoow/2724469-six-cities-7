@@ -1,4 +1,4 @@
-import { UserType } from './user-type.enum.js';
+import { UserType } from './user-types.js';
 
 export type User = {
   name: string;

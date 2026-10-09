@@ -15,6 +15,7 @@
     "compile": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
     "ts": "ts-node",
+    "mock:server": "json-server ./mocks/mock-server-data.json --port 3123",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -44,6 +45,7 @@
     "npm": ">=8"
   },
   "dependencies": {
-    "chalk": "^6.0.0"
+    "chalk": "^6.0.0",
+    "json-server": "0.17.3"
   }
 }
