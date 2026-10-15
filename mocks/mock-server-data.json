@@ -1,0 +1,63 @@
+{
+  "api": {
+    "titles": [
+      "Подводный бункер «Атлантида»",
+      "Лесной домик на дереве",
+      "Хай-тек лофт в центре",
+      "Загородная усадьба «Дворянская»",
+      "Минималистичный капсульный отель"
+    ],
+    "descriptions": [
+      "Панорамный вид на обитателей океана прямо из вашей спальни! Подводная звукоизоляция и персональный батискаф для прогулок.",
+      "Уютное убежище среди верхушек сосен. Автономное солнечное питание, пение птиц по утрам и гамак на свежем воздухе.",
+      "Просторное пространство в стиле урбан-шик с панорамными окнами, умным домом и голосовым управлением всеми системами.",
+      "Просторное поместье с собственным прудом, яблоневым садом и баней на дровах. Идеально для семейных праздников.",
+      "Компактный и технологичный модуль для тех, кто ценит функциональность. Все необходимое на 10 квадратных метрах."
+    ],
+    "offerImages": [
+      "https://eg.com/bunker-atlantis-1.jpg",
+      "https://eg.com/bunker-atlantis-2.jpg",
+      "https://eg.com/bunker-atlantis-3.jpg",
+      "https://eg.com/tree-house-1.jpg",
+      "https://eg.com/tree-house-2.jpg",
+      "https://eg.com/tree-house-3.jpg",
+      "https://eg.com/hitech-loft-1.jpg",
+      "https://eg.com/hitech-loft-2.jpg",
+      "https://eg.com/hitech-loft-3.jpg",
+      "https://eg.com/estate-manor-1.jpg",
+      "https://eg.com/estate-manor-2.jpg",
+      "https://eg.com/estate-manor-3.jpg",
+      "https://eg.com/capsule-hotel-1.jpg",
+      "https://eg.com/capsule-hotel-2.jpg",
+      "https://eg.com/capsule-hotel-3.jpg"
+    ],
+    "users": [
+      "Дайвер",
+      "Эколог",
+      "Техногик",
+      "Барин",
+      "Урбанист"
+    ],
+    "emails": [
+      "ocean-explorer@example.com",
+      "eco-life@example.com",
+      "tech-coder@example.com",
+      "manor-owner@example.com",
+      "city-traveler@example.com"
+    ],
+    "passwords": [
+      "ocean2026",
+      "green_forest",
+      "cyberpunk99",
+      "manor_estate",
+      "minimalist1"
+    ],
+    "avatars": [
+      "ocean-explorer-avatar.jpg",
+      "eco-life-avatar.jpg",
+      "tech-coder-avatar.jpg",
+      "manor-owner-avatar.jpg",
+      "city-traveler-avatar.jpg"
+    ]
+  }
+}
