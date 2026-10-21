@@ -40,3 +40,14 @@ export const CHUNK_SIZE = 16384;
 
 export const RETRY_COUNT = 5;
 export const RETRY_TIMEOUT = 1000;
+
+export const MIN_NAME_LENGTH = 1;
+export const MAX_NAME_LENGTH = 15;
+
+export const DEFAULT_AVATAR_PATH = '';
+
+export const MIN_TITLE_LENGTH = 10;
+export const MAX_TITLE_LENGTH = 100;
+
+export const MIN_DESCRIPTION_LENGTH = 20;
+export const MAX_DESCRIPTION_LENGTH = 1024;
