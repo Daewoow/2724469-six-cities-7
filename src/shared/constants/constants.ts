@@ -37,3 +37,6 @@ export const DUSSELDORF_LAT = 51.225402;
 export const DUSSELDORF_LON = 6.776314;
 
 export const CHUNK_SIZE = 16384;
+
+export const RETRY_COUNT = 5;
+export const RETRY_TIMEOUT = 1000;
