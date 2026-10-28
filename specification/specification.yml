@@ -1,0 +1,662 @@
+openapi: 3.1.0
+info:
+  title: API сервер для демо-проекта «Шесть городов».
+  description: |-
+    * Список ресурсов и маршрутов сервера «Шесть городов».
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 2.0.0
+
+tags:
+  - name: users
+    description: Действия с пользователем.
+  - name: offers
+    description: Действия с объявлениями.
+  - name: comments
+    description: Действия с комментариями.
+
+paths:
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Регистрация пользователя.
+      description: Регистрирует нового пользователя.
+
+      requestBody:
+        description: Информация для создания нового пользователя.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+
+      responses:
+        "201":
+          description: Пользователь успешно зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        "400":
+          description: Ошибка валидации данных.
+        "409":
+          description: Пользователь с таким email уже существует.
+
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Авторизация пользователя.
+      description: Авторизует пользователя на основе email и пароля.
+
+      requestBody:
+        description: Данные для авторизации.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginUser'
+
+      responses:
+        "200":
+          description: Успешная авторизация.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+        "401":
+          description: Неверный email или пароль.
+
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: Выход из системы.
+      description: Завершает сеанс пользователя.
+      security:
+        - bearerAuth: []
+
+      responses:
+        "200":
+          description: Успешный выход.
+        "401":
+          description: Пользователь не авторизован.
+
+  /users/status:
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя.
+      description: Возвращает информацию по авторизованному пользователю.
+      security:
+        - bearerAuth: []
+
+      responses:
+        "200":
+          description: Пользователь авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        "401":
+          description: Пользователь не авторизован.
+
+  /offers:
+    get:
+      tags:
+        - offers
+      summary: Получение списка объявлений.
+      description: Возвращает список объявлений по аренде.
+      parameters:
+        - name: limit
+          in: query
+          description: Количество возвращаемых объявлений.
+          schema:
+            type: integer
+            default: 60
+
+      responses:
+        "200":
+          description: Список объявлений.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/offerShort'
+
+    post:
+      tags:
+        - offers
+      summary: Создание нового объявления.
+      description: Создает новое объявление по аренде.
+      security:
+        - bearerAuth: []
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createOffer'
+
+      responses:
+        "201":
+          description: Объявление создано.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        "400":
+           description: Ошибка валидации данных.
+        "401":
+          description: Пользователь не авторизован.
+
+  /offers/{offerId}:
+    get:
+      tags:
+        - offers
+      summary: Получение детальной информации об объявлении.
+      description: Возвращает полную информацию об объявлении по аренде.
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Объявление.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        "404":
+          description: Объявление не найдено.
+
+    put:
+      tags:
+        - offers
+      summary: Редактирование объявления.
+      description: Редактирует существующее объявление по аренде.
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateOffer'
+
+      responses:
+        "200":
+          description: Объявление обновлено.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+        "401":
+          description: Пользователь не авторизован.
+        "403":
+          description: Нельзя редактировать чужое объявление.
+        "404":
+          description: Объявление не найдено.
+
+    delete:
+      tags:
+        - offers
+      summary: Удаление объявления.
+      description: Удаляет объявление по аренде.
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "204":
+          description: Объявление удалено.
+        "401":
+          description: Пользователь не авторизован.
+        "403":
+          description: Нельзя удалить чужое объявление.
+        "404":
+          description: Объявление не найдено.
+
+  /offers/premium/{city}:
+    get:
+      tags:
+        - offers
+      summary: Получение премиальных объявлений для города.
+      description: Возвращает до 3 премиальных объявлений для указанного города.
+      parameters:
+        - name: city
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/city'
+
+      responses:
+        "200":
+          description: Премиальные объявления.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/offerShort'
+
+  /offers/favorites:
+    get:
+      tags:
+        - offers
+      summary: Получение избранных объявлений.
+      description: Возвращает список объявлений, добавленных в избранное.
+      security:
+        - bearerAuth: []
+
+      responses:
+        "200":
+          description: Избранные объявления.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/offerShort'
+        "401":
+          description: Пользователь не авторизован.
+
+  /offers/favorites/{offerId}:
+    post:
+      tags:
+        - offers
+      summary: Добавление в избранное.
+      description: Добавляет объявление в список избранных.
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Объявление добавлено в избранное.
+        "401":
+          description: Пользователь не авторизован.
+        "404":
+          description: Объявление не найдено.
+
+    delete:
+      tags:
+        - favorites
+      summary: Удаление из избранного.
+      description: Удаляет объявление из списка избранных.
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Объявление удалено из избранного.
+        "401":
+          description: Пользователь не авторизован.
+        "404":
+          description: Объявление не найдено.
+
+  /offers/{offerId}/comments:
+    get:
+      tags:
+        - comments
+      summary: Получение комментариев к объявлению.
+      description: Возвращает до 50 последних комментариев к объявлению.
+
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Комментарии к объявлению.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/comment'
+
+    post:
+      tags:
+        - comments
+      summary: Добавление комментария.
+      description: Добавляет новый комментарий к объявлению.
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createComment'
+
+      responses:
+        "201":
+          description: Комментарий добавлен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+        "400":
+          description: Ошибка валидации данных.
+        "401":
+          description: Пользователь не авторизован.
+        "404":
+          description: Объявление не найдено.
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    loginUser:
+      type: object
+      required: [email, password]
+
+      properties:
+        email:
+          type: string
+          format: email
+          example: keks@htmlacademy.ru
+
+        password:
+          type: string
+          example: 123456
+
+    createUser:
+      allOf:
+        - $ref: '#/components/schemas/loginUser'
+        - type: object
+          required: [name]
+
+          properties:
+            name:
+              type: string
+              minLength: 1
+              maxLength: 15
+              example: Keks
+
+    user:
+      type: object
+      required: [id, name, email, avatarPath, type]
+
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+        name:
+          type: string
+          example: Keks
+
+        email:
+          type: string
+          example: keks@htmlacademy.ru
+
+        avatarPath:
+          type: string
+          example: /avatars/keks.jpg
+
+        type:
+          type: string
+          enum: [обычный, pro]
+          example: обычный
+
+    createOffer:
+      type: object
+      required:
+        [title, description, city, previewImage, images, isPremium, housingType, rooms, guests, price, amenities, coordinates]
+
+      properties:
+        title:
+          type: string
+          minLength: 10
+          maxLength: 100
+          example: Beautiful & luxurious studio at great location
+
+        description:
+          type: string
+          minLength: 20
+          maxLength: 1024
+          example: A quiet cozy and picturesque that hides behind a river by the unique lightness of Amsterdam. The building is green and from 18th century.
+
+        city:
+          $ref: '#/components/schemas/city'
+
+        previewImage:
+          type: string
+          example: preview-image.jpg
+
+        images:
+          type: array
+          items:
+            type: string
+          minItems: 6
+          maxItems: 6
+          example: ["img1.jpg", "img2.jpg", "img3.jpg", "img4.jpg", "img5.jpg", "img6.jpg"]
+
+        isPremium:
+          type: boolean
+          example: true
+
+        housingType:
+          $ref: '#/components/schemas/housingType'
+
+        rooms:
+          type: number
+          minimum: 1
+          maximum: 8
+          example: 2
+
+        guests:
+          type: number
+          minimum: 1
+          maximum: 10
+          example: 4
+
+        price:
+          type: number
+          minimum: 100
+          maximum: 100000
+          example: 1500
+
+        amenities:
+          type: array
+          items:
+            type: string
+            enum: [Breakfast, Air conditioning, Laptop friendly workspace, Baby seat, Washer, Towels, Fridge]
+          example: ["Breakfast", "Air conditioning"]
+
+        coordinates:
+          $ref: '#/components/schemas/coordinates'
+
+    updateOffer:
+      allOf:
+        - $ref: '#/components/schemas/createOffer'
+        - type: object
+          required: []
+
+    offer:
+      allOf:
+        - $ref: '#/components/schemas/createOffer'
+        - type: object
+          required: [id, postDate, rating, isFavorite, author, commentCount]
+
+          properties:
+            id:
+              type: string
+              example: 6329c3d6a04ab1061c6425ea
+
+            postDate:
+              type: string
+              format: date-time
+
+            rating:
+              type: number
+              minimum: 1
+              maximum: 5
+              example: 4.5
+
+            isFavorite:
+              type: boolean
+              example: false
+
+            author:
+              $ref: '#/components/schemas/user'
+
+            commentCount:
+              type: number
+              example: 5
+
+    offerShort:
+      type: object
+      required: [id, title, housingType, price, city, isFavorite, isPremium, rating, previewImage, postDate, commentCount]
+
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+        title:
+          type: string
+          example: Beautiful & luxurious studio at great location
+
+        housingType:
+          $ref: '#/components/schemas/housingType'
+
+        price:
+          type: number
+          example: 1500
+
+        city:
+          $ref: '#/components/schemas/city'
+
+        isFavorite:
+          type: boolean
+          example: false
+
+        isPremium:
+          type: boolean
+          example: true
+
+        rating:
+          type: number
+          example: 4.5
+
+        previewImage:
+          type: string
+          example: preview-image.jpg
+
+        postDate:
+          type: string
+          format: date-time
+
+        commentCount:
+          type: number
+          example: 5
+
+    createComment:
+      type: object
+      required: [text, rating]
+
+      properties:
+        text:
+          type: string
+          minLength: 5
+          maxLength: 1024
+          example: WOW!!!
+
+        rating:
+          type: number
+          minimum: 1
+          maximum: 5
+          example: 5
+
+    comment:
+      allOf:
+        - $ref: '#/components/schemas/createComment'
+        - type: object
+          required: [id, createdDate, author]
+
+          properties:
+            id:
+              type: string
+              example: 6329c3d6a04ab1061c6425ea
+
+            createdDate:
+              type: string
+              format: date-time
+
+            author:
+              $ref: '#/components/schemas/user'
+
+    city:
+      type: string
+      enum: [Paris, Cologne, Brussels, Amsterdam, Hamburg, Dusseldorf]
+      example: Paris
+
+    housingType:
+      type: string
+      enum: [apartment, house, room, hotel]
+      example: apartment
+
+    coordinates:
+      type: object
+      required:
+        [latitude, longitude]
+      properties:
+        latitude:
+          type: number
+          example: 48.85661
+        longitude:
+          type: number
+          example: 2.351499
