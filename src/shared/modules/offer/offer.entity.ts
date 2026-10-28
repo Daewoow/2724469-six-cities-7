@@ -28,7 +28,7 @@ import {
   MAX_GUESTS,
   MIN_PRICE,
   MAX_PRICE,
-  DEFAULT_COMMENT_COUNT,
+  ZERO_COMMENTS,
 } from '../../constants/index.js';
 
 export interface OfferEntity extends defaultClasses.Base {}
@@ -95,9 +95,6 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({ required: true, default: false })
   public isPremium: boolean;
 
-  @prop({ required: true, default: false })
-  public isFavorite: boolean;
-
   @prop({
     required: true,
     min: [MIN_RATING, `Рейтинг не может быть меньше ${MIN_RATING}.`],
@@ -141,12 +138,12 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   public amenities: Amenity[];
 
   @prop({
-    ref: UserEntity,
+    ref: 'UserEntity',
     required: true,
   })
   public author: Ref<UserEntity>;
 
-  @prop({ required: true, default: DEFAULT_COMMENT_COUNT })
+  @prop({ required: true, default: ZERO_COMMENTS })
   public commentCount: number;
 
   @prop({

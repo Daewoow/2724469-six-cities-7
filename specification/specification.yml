@@ -13,6 +13,8 @@ tags:
     description: Действия с пользователем.
   - name: offers
     description: Действия с объявлениями.
+  - name: favorites
+    description: Действия с избранными объявлениями.
   - name: comments
     description: Действия с комментариями.
 
@@ -104,19 +106,58 @@ paths:
         "401":
           description: Пользователь не авторизован.
 
+  /users/{userId}:
+    put:
+      tags:
+        - users
+      summary: Обновление данных пользователя.
+      description: Позволяет изменить имя или аватар пользователя.
+      security:
+        - bearerAuth: []
+
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateUser'
+      responses:
+        "200":
+          description: Данные пользователя успешно обновлены.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        "400":
+          description: Ошибка валидации данных.
+        "401":
+          description: Пользователь не авторизован.
+        "403":
+          description: Нельзя обновлять чужого пользователя.
+        "404":
+          description: Пользователь не найден.
+
   /offers:
     get:
       tags:
         - offers
       summary: Получение списка объявлений.
-      description: Возвращает список объявлений по аренде.
+      description: Возвращает список из не более 60 объявлений по аренде.
       parameters:
         - name: limit
           in: query
           description: Количество возвращаемых объявлений.
           schema:
-            type: integer
-            default: 60
+            type: number
+            minimum: 1
+            maximum: 60
 
       responses:
         "200":
@@ -207,6 +248,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/offer'
+        "400":
+          description: Ошибка валидации данных.
         "401":
           description: Пользователь не авторизован.
         "403":
@@ -244,13 +287,20 @@ paths:
       tags:
         - offers
       summary: Получение премиальных объявлений для города.
-      description: Возвращает до 3 премиальных объявлений для указанного города.
+      description: Возвращает не больше 3 премиальных объявлений для указанного города.
       parameters:
         - name: city
           in: path
           required: true
           schema:
             $ref: '#/components/schemas/city'
+        - name: limit
+          in: query
+          description: Количество возвращаемых объявлений.
+          schema:
+            type: number
+            minimum: 1
+            maximum: 3
 
       responses:
         "200":
@@ -262,10 +312,10 @@ paths:
                 items:
                   $ref: '#/components/schemas/offerShort'
 
-  /offers/favorites:
+  /favorites:
     get:
       tags:
-        - offers
+        - favorites
       summary: Получение избранных объявлений.
       description: Возвращает список объявлений, добавленных в избранное.
       security:
@@ -283,10 +333,10 @@ paths:
         "401":
           description: Пользователь не авторизован.
 
-  /offers/favorites/{offerId}:
+  /favorites/{offerId}:
     post:
       tags:
-        - offers
+        - favorites
       summary: Добавление в избранное.
       description: Добавляет объявление в список избранных.
       security:
@@ -335,7 +385,7 @@ paths:
       tags:
         - comments
       summary: Получение комментариев к объявлению.
-      description: Возвращает до 50 последних комментариев к объявлению.
+      description: Возвращает список из 50 (или меньше) последних комментариев к объявлению.
 
       parameters:
         - name: offerId
@@ -343,6 +393,13 @@ paths:
           required: true
           schema:
             type: string
+        - name: limit
+          in: query
+          description: Количество возвращаемых комментариев.
+          schema:
+            type: number
+            minimum: 1
+            maximum: 50
 
       responses:
         "200":
@@ -451,10 +508,31 @@ components:
           enum: [обычный, pro]
           example: обычный
 
-    createOffer:
+    updateUser:
       type: object
-      required:
-        [title, description, city, previewImage, images, isPremium, housingType, rooms, guests, price, amenities, coordinates]
+
+      properties:
+        name:
+          type: string
+          example: Keks1
+
+        avatarPath:
+          type: string
+          example: /avatars/keks-new.jpg
+
+    createOffer:
+      allOf:
+        - $ref: '#/components/schemas/updateOffer'
+        - type: object
+          required: [author, title, description, city, previewImage, images, isPremium, housingType, rooms, guests, price, amenities, coordinates]
+
+          properties:
+            author:
+              $ref: '#/components/schemas/user'
+
+    updateOffer:
+      type: object
+      required: []
 
       properties:
         title:
@@ -519,17 +597,11 @@ components:
         coordinates:
           $ref: '#/components/schemas/coordinates'
 
-    updateOffer:
-      allOf:
-        - $ref: '#/components/schemas/createOffer'
-        - type: object
-          required: []
-
     offer:
       allOf:
         - $ref: '#/components/schemas/createOffer'
         - type: object
-          required: [id, postDate, rating, isFavorite, author, commentCount]
+          required: [id, postDate, rating, isFavorite, commentCount]
 
           properties:
             id:
@@ -549,9 +621,6 @@ components:
             isFavorite:
               type: boolean
               example: false
-
-            author:
-              $ref: '#/components/schemas/user'
 
             commentCount:
               type: number

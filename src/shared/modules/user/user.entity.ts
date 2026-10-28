@@ -3,6 +3,7 @@ import {
   getModelForClass,
   prop,
   modelOptions,
+  Ref,
 } from '@typegoose/typegoose';
 import { getAllUserTypes, User, UserType } from '../../types/index.js';
 import { createSHA256 } from '../../helpers/index.js';
@@ -11,6 +12,7 @@ import {
   MAX_NAME_LENGTH,
   DEFAULT_AVATAR_PATH,
 } from '../../constants/index.js';
+import { FavoriteEntity } from '../favorite/index.js';
 
 export interface UserEntity extends defaultClasses.Base {}
 
@@ -63,6 +65,12 @@ export class UserEntity extends defaultClasses.TimeStamps implements User {
     enum: getAllUserTypes(),
   })
   public type: UserType;
+
+  @prop({
+    ref: () => FavoriteEntity,
+    default: [],
+  })
+  public favorites: Ref<FavoriteEntity>[];
 
   constructor(userData: User) {
     super();
