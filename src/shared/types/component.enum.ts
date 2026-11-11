@@ -13,5 +13,6 @@ export const Component = {
   CommentModel: Symbol.for('CommentModel'),
   OfferController: Symbol.for('OfferController'),
   UserController: Symbol.for('UserController'),
+  FavoriteController: Symbol.for('FavoriteController'),
   ExceptionFilter: Symbol.for('ExceptionFilter'),
 } as const;

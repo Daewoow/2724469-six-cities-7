@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import {
   BaseController,
   HttpError,
@@ -14,8 +14,6 @@ import { StatusCodes } from 'http-status-codes';
 import { fillDTO } from '../../helpers/index.js';
 import { UserRdo } from './rdo/user.rdo.js';
 import { UserService } from './user-service.interface.js';
-import { LogoutRequest } from './logout-request.type.js';
-import { StatusRequest } from './status-request.type.js';
 
 @injectable()
 export class UserController extends BaseController {
@@ -91,7 +89,7 @@ export class UserController extends BaseController {
     );
   }
 
-  public async logout(_req: LogoutRequest, _res: Response): Promise<void> {
+  public async logout(_req: Request, _res: Response): Promise<void> {
     // TODO: Реализовать выход из системы
     throw new HttpError(
       StatusCodes.NOT_IMPLEMENTED,
@@ -100,7 +98,7 @@ export class UserController extends BaseController {
     );
   }
 
-  public async status(_req: StatusRequest, _res: Response): Promise<void> {
+  public async status(_req: Request, _res: Response): Promise<void> {
     // TODO: Реализовать проверку авторизации
     throw new HttpError(
       StatusCodes.NOT_IMPLEMENTED,
