@@ -1,0 +1,39 @@
+# Пользователи
+## Создать нового пользователя
+
+POST http://localhost:5001/users/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "keks1@htmlacademy.ru",
+  "avatarPath": "/avatars/keks1.jpg",
+  "name": "Keks1",
+  "password": "123456",
+  "type": "pro"
+}
+
+###
+
+## Авторизовать пользователя
+
+POST http://localhost:5001/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "keks@htmlacademy.ru",
+  "password": "123456"
+}
+
+###
+
+## Выйти из системы
+POST http://localhost:5001/users/logout HTTP/1.1
+Content-Type: application/json
+
+###
+
+## Проверить статус пользователя
+GET http://localhost:5001/users/status HTTP/1.1
+Content-Type: application/json
+
+###

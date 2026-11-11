@@ -18,6 +18,8 @@ export class RestApplication {
     private readonly databaseClient: DatabaseClient,
     @inject(Component.OfferController)
     private readonly offerController: Controller,
+    @inject(Component.UserController)
+    private readonly userController: Controller,
     @inject(Component.ExceptionFilter)
     private readonly appExceptionFilter: ExceptionFilter,
   ) {
@@ -43,6 +45,7 @@ export class RestApplication {
 
   private async _initControllers() {
     this.server.use('/offers', this.offerController.router);
+    this.server.use('/users', this.userController.router);
   }
 
   private async _initMiddleware() {

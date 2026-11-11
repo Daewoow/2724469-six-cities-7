@@ -106,44 +106,6 @@ paths:
         "401":
           description: Пользователь не авторизован.
 
-  /users/{userId}:
-    put:
-      tags:
-        - users
-      summary: Обновление данных пользователя.
-      description: Позволяет изменить имя или аватар пользователя.
-      security:
-        - bearerAuth: []
-
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: string
-
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/updateUser'
-      responses:
-        "200":
-          description: Данные пользователя успешно обновлены.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/user'
-        "400":
-          description: Ошибка валидации данных.
-        "401":
-          description: Пользователь не авторизован.
-        "403":
-          description: Нельзя обновлять чужого пользователя.
-        "404":
-          description: Пользователь не найден.
-
   /offers:
     get:
       tags:
@@ -509,18 +471,6 @@ components:
           type: string
           enum: [обычный, pro]
           example: обычный
-
-    updateUser:
-      type: object
-
-      properties:
-        name:
-          type: string
-          example: Keks1
-
-        avatarPath:
-          type: string
-          example: /avatars/keks-new.jpg
 
     createOffer:
       allOf:
