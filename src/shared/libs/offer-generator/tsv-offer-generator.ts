@@ -28,7 +28,7 @@ import {
   MAX_GUESTS,
   MIN_PRICE,
   MAX_PRICE,
-  DEFAULT_COMMENT_COUNT,
+  ZERO_COMMENTS,
 } from '../../constants/index.js';
 
 export class TSVOfferGenerator implements OfferGenerator {
@@ -63,7 +63,7 @@ export class TSVOfferGenerator implements OfferGenerator {
     const avatar = getRandomItem<string>(this.mockData.avatars);
     const password = getRandomItem<string>(this.mockData.passwords);
     const type = getRandomItem<string>(getAllUserTypes());
-    const commentCount = DEFAULT_COMMENT_COUNT;
+    const commentCount = ZERO_COMMENTS;
     const coords = getDefaultCityCoordinates(city);
     const coordsString = [coords.latitude, coords.longitude].join(';');
 

@@ -1,3 +1,12 @@
+export const DEFAULT_RETURN_OFFERS_COUNT = 60;
+export const MAX_RETURN_OFFERS_LIMIT = 60;
+
+export const DEFAULT_RETURN_PREMIUM_OFFERS_COUNT = 3;
+export const MAX_RETURN_PREMIUM_OFFERS_LIMIT = 3;
+
+export const DEFAULT_RETURN_COMMENTS_COUNT = 50;
+export const MAX_RETURN_COMMENTS_LIMIT = 50;
+
 export const FIRST_WEEK_DAY = 1;
 export const LAST_WEEK_DAY = 7;
 
@@ -16,7 +25,7 @@ export const MAX_GUESTS = 10;
 export const MIN_PRICE = 100;
 export const MAX_PRICE = 100_000;
 
-export const DEFAULT_COMMENT_COUNT = 0;
+export const ZERO_COMMENTS = 0;
 
 export const PARIS_LAT = 48.85661;
 export const PARIS_LON = 2.351499;
@@ -44,6 +53,7 @@ export const RETRY_TIMEOUT = 1000;
 export const MIN_NAME_LENGTH = 1;
 export const MAX_NAME_LENGTH = 15;
 
+// ToDo
 export const DEFAULT_AVATAR_PATH = '';
 
 export const MIN_TITLE_LENGTH = 10;
