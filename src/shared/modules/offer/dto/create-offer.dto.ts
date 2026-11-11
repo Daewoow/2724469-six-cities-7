@@ -2,7 +2,6 @@ import {
   CityName,
   HousingType,
   Amenity,
-  User,
   Coordinates,
 } from '../../../types/index.js';
 
@@ -19,6 +18,6 @@ export class CreateOfferDto {
   public guests: number;
   public price: number;
   public amenities: Amenity[];
-  public author: User;
+  public author: string;
   public coordinates: Coordinates;
 }

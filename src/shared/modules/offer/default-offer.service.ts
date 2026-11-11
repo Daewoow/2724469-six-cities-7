@@ -38,14 +38,15 @@ export class DefaultOfferService implements OfferService {
     return this.offerModel.findById(offerId).populate('author').exec();
   }
 
-  public async find(
-    limit = DEFAULT_RETURN_OFFERS_COUNT,
-  ): Promise<DocumentType<OfferEntity>[]> {
-    limit = Math.min(limit, MAX_RETURN_OFFERS_LIMIT);
+  public async find(limit?: number): Promise<DocumentType<OfferEntity>[]> {
+    const actualLimit = limit
+      ? Math.min(limit, MAX_RETURN_OFFERS_LIMIT)
+      : DEFAULT_RETURN_OFFERS_COUNT;
+
     return this.offerModel
       .find()
       .sort({ postDate: SortType.Down })
-      .limit(limit)
+      .limit(actualLimit)
       .populate('author')
       .exec();
   }
@@ -112,13 +113,15 @@ export class DefaultOfferService implements OfferService {
 
   public async findPremiumByCity(
     city: CityName,
-    limit = DEFAULT_RETURN_PREMIUM_OFFERS_COUNT,
+    limit?: number,
   ): Promise<DocumentType<OfferEntity>[]> {
-    limit = Math.min(limit, MAX_RETURN_PREMIUM_OFFERS_LIMIT);
+    const actualLimit = limit
+      ? Math.min(limit, MAX_RETURN_PREMIUM_OFFERS_LIMIT)
+      : DEFAULT_RETURN_PREMIUM_OFFERS_COUNT;
     return this.offerModel
       .find({ city, isPremium: true })
       .sort({ postDate: SortType.Down })
-      .limit(limit)
+      .limit(actualLimit)
       .populate('author')
       .exec();
   }

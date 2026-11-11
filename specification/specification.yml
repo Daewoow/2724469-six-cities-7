@@ -219,7 +219,7 @@ paths:
         "404":
           description: Объявление не найдено.
 
-    put:
+    patch:
       tags:
         - offers
       summary: Редактирование объявления.
@@ -311,6 +311,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/offerShort'
+        "400":
+          description: Указанный город не поддерживается.
 
   /favorites:
     get:
@@ -628,7 +630,7 @@ components:
 
     offerShort:
       type: object
-      required: [id, title, housingType, price, city, isFavorite, isPremium, rating, previewImage, postDate, commentCount]
+      required: [id, title, housingType, price, city, postDate, isFavorite, isPremium, rating, previewImage]
 
       properties:
         id:
@@ -649,6 +651,10 @@ components:
         city:
           $ref: '#/components/schemas/city'
 
+        postDate:
+          type: string
+          format: date-time
+
         isFavorite:
           type: boolean
           example: false
@@ -664,14 +670,6 @@ components:
         previewImage:
           type: string
           example: preview-image.jpg
-
-        postDate:
-          type: string
-          format: date-time
-
-        commentCount:
-          type: number
-          example: 5
 
     createComment:
       type: object
