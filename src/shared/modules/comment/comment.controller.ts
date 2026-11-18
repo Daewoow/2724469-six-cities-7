@@ -1,10 +1,11 @@
 import { inject, injectable } from 'inversify';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import {
   BaseController,
   HttpError,
   HttpMethod,
+  ValidateObjectIdMiddleware,
 } from '../../libs/rest/index.js';
 import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
@@ -12,7 +13,6 @@ import { CommentService } from './comment-service.interface.js';
 import { OfferService } from '../offer/index.js';
 import { fillDTO } from '../../helpers/index.js';
 import { CommentRdo } from './rdo/comment.rdo.js';
-import { CreateCommentRequest } from './types/create-comment-request.type.js';
 
 @injectable()
 export default class CommentController extends BaseController {
@@ -25,24 +25,28 @@ export default class CommentController extends BaseController {
     super(logger);
 
     this.logger.info('Регистрация маршрутов для CommentController…');
-    this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')],
+    });
   }
 
-  public async create(
-    { body }: CreateCommentRequest,
-    res: Response,
-  ): Promise<void> {
-    if (!(await this.offerService.exists(body.offerId))) {
+  public async create(req: Request, res: Response): Promise<void> {
+    const { offerId } = req.params;
+
+    if (!(await this.offerService.exists(offerId))) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
-        `Объявление с id «${body.offerId}» не найдено.`,
+        `Объявление с id «${offerId}» не найдено.`,
         'CommentController',
       );
     }
 
-    const comment = await this.commentService.create(body);
-    await this.offerService.incCommentCount(body.offerId);
-    await this.offerService.recalculateRating(body.offerId);
+    const comment = await this.commentService.create(offerId, req.body);
+    await this.offerService.incCommentCount(offerId);
+    await this.offerService.recalculateRating(offerId);
     this.created(res, fillDTO(CommentRdo, comment));
   }
 }

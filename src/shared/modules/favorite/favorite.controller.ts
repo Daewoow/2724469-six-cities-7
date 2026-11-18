@@ -4,6 +4,7 @@ import {
   BaseController,
   HttpError,
   HttpMethod,
+  ValidateObjectIdMiddleware,
 } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
@@ -29,11 +30,13 @@ export class FavoriteController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Post,
       handler: this.create,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')],
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Delete,
       handler: this.delete,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')],
     });
   }
 
