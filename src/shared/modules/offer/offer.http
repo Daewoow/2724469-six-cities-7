@@ -40,7 +40,11 @@ Content-Type: application/json
   "coordinates": {
     "latitude": 48.85661,
     "longitude": 2.351499
-  }
+  },
+  "rating": 0,
+  "postDate": "2025-12-06T23:56:12.000Z",
+  "commentCount": 0,
+  "author": "68ee445e3e27bc0a0640b1c1"
 }
 
 ###

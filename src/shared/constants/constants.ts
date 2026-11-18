@@ -60,3 +60,9 @@ export const MAX_TITLE_LENGTH = 100;
 
 export const MIN_DESCRIPTION_LENGTH = 20;
 export const MAX_DESCRIPTION_LENGTH = 1024;
+
+export const MIN_PASSWORD_LENGTH = 6;
+export const MAX_PASSWORD_LENGTH = 12;
+
+export const MIN_COMMENT_TEXT_LENGTH = 5;
+export const MAX_COMMENT_TEXT_LENGTH = 1024;

@@ -1,7 +1,6 @@
 import { FavoriteService } from './favorite-service.interface.js';
 import { DocumentType, types } from '@typegoose/typegoose';
 import { FavoriteEntity } from './favorite.entity.js';
-import { FavoriteDto } from './dto/favorite.dto.js';
 import { inject, injectable } from 'inversify';
 import { Component } from '../../types/index.js';
 import { Logger } from '../../libs/logger/index.js';
@@ -14,32 +13,39 @@ export class DefaultFavoriteService implements FavoriteService {
     private readonly favoriteModel: types.ModelType<FavoriteEntity>,
   ) {}
 
-  public async create(dto: FavoriteDto): Promise<DocumentType<FavoriteEntity>> {
-    const result = await this.favoriteModel.create(dto);
+  public async create(
+    userId: string,
+    offerId: string,
+  ): Promise<DocumentType<FavoriteEntity>> {
+    const result = await this.favoriteModel.create({ userId, offerId });
     this.logger.info(
-      `Добавлено в избранное: user=${dto.userId}, offer=${dto.offerId}.`,
+      `Добавлено в избранное: user=${userId}, offer=${offerId}.`,
     );
 
     return result.populate(['userId', 'offerId']);
   }
 
   public async delete(
-    dto: FavoriteDto,
+    userId: string,
+    offerId: string,
   ): Promise<DocumentType<FavoriteEntity> | null> {
-    return this.favoriteModel.findOneAndDelete(dto).exec();
+    return this.favoriteModel
+      .findOneAndDelete({ userId, offerId })
+      .populate(['userId', 'offerId'])
+      .exec();
   }
 
   public async findByUser(
     userId: string,
   ): Promise<DocumentType<FavoriteEntity>[]> {
-    return this.favoriteModel.find({ user: userId }).populate('offerId').exec();
+    return this.favoriteModel.find({ userId }).populate('offerId').exec();
   }
 
-  public async exists(dto: FavoriteDto): Promise<boolean> {
+  public async exists(userId: string, offerId: string): Promise<boolean> {
     return (
       (await this.favoriteModel.exists({
-        userId: dto.userId,
-        offerId: dto.offerId,
+        userId: userId,
+        offerId: offerId,
       })) !== null
     );
   }
