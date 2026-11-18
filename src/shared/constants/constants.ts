@@ -12,7 +12,7 @@ export const LAST_WEEK_DAY = 7;
 
 export const OFFER_IMAGES_COUNT = 6;
 
-export const MIN_RATING = 1;
+export const MIN_RATING = 0;
 export const MAX_RATING = 5;
 export const RATING_DECIMAL_DIGITS = 1;
 

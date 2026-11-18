@@ -20,13 +20,13 @@ export class FavoriteEntity extends defaultClasses.TimeStamps {
     ref: 'UserEntity',
     required: true,
   })
-  public user: Ref<UserEntity>;
+  public userId: Ref<UserEntity>;
 
   @prop({
     ref: 'OfferEntity',
     required: true,
   })
-  public offer: Ref<OfferEntity>;
+  public offerId: Ref<OfferEntity>;
 }
 
 export const FavoriteModel = getModelForClass(FavoriteEntity);

@@ -1,0 +1,18 @@
+# Избранное
+## Получить список избранных объявлений
+GET http://localhost:5001/favorites HTTP/1.1
+Content-Type: application/json
+
+###
+
+## Добавить объявление в избранное
+POST http://localhost:5001/favorites/68ee445e3e27bc0a0640b1be HTTP/1.1
+Content-Type: application/json
+
+###
+
+## Удалить объявление из избранного
+DELETE http://localhost:5001/favorites/68ee445e3e27bc0a0640b1be HTTP/1.1
+Content-Type: application/json
+
+###

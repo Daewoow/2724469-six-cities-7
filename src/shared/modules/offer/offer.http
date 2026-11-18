@@ -1,0 +1,83 @@
+# Объявления
+## Получить список объявлений
+GET http://localhost:5001/offers HTTP/1.1
+Content-Type: application/json
+
+###
+
+## Получить определенное количество объявлений
+GET http://localhost:5001/offers?limit=5 HTTP/1.1
+Content-Type: application/json
+
+###
+
+## Создать новое объявление
+POST http://localhost:5001/offers HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Beautiful & luxurious studio at great location",
+  "description": "A quiet cozy and picturesque that hides behind a river by the unique lightness of Amsterdam. The building is green and from 18th century.",
+  "city": "Paris",
+  "previewImage": "preview-image.jpg",
+  "images": [
+    "img1.jpg",
+    "img2.jpg",
+    "img3.jpg",
+    "img4.jpg",
+    "img5.jpg",
+    "img6.jpg"
+  ],
+  "isPremium": true,
+  "housingType": "apartment",
+  "rooms": 2,
+  "guests": 4,
+  "price": 1500,
+  "amenities": [
+    "Breakfast",
+    "Air conditioning"
+  ],
+  "coordinates": {
+    "latitude": 48.85661,
+    "longitude": 2.351499
+  }
+}
+
+###
+
+## Получить детальную информацию об объявлении
+GET http://localhost:5001/offers/68ee44fb5eedf2ed1d053d42 HTTP/1.1
+Content-Type: application/json
+
+###
+
+## Редактировать объявление
+PATCH http://localhost:5001/offers/68ee44fb5eedf2ed1d053d42 HTTP/1.1
+Content-Type: application/json
+
+{
+  "title": "Updated Beautiful Studio",
+  "description": "Updated description with amazing view",
+  "price": 1800,
+  "isPremium": false
+}
+
+###
+
+## Удалить объявление
+DELETE http://localhost:5001/offers/68ee44fb5eedf2ed1d053d3f HTTP/1.1
+Content-Type: application/json
+
+###
+
+## Получить премиальные объявления для Парижа
+GET http://localhost:5001/offers/premium/Paris HTTP/1.1
+Content-Type: application/json
+
+###
+
+## Получить премиальные объявления для Амстердама с лимитом
+GET http://localhost:5001/offers/premium/Amsterdam?limit=2 HTTP/1.1
+Content-Type: application/json
+
+###

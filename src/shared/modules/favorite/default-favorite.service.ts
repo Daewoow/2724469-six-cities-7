@@ -20,7 +20,7 @@ export class DefaultFavoriteService implements FavoriteService {
       `Добавлено в избранное: user=${dto.userId}, offer=${dto.offerId}.`,
     );
 
-    return result.populate(['user', 'offer']);
+    return result.populate(['userId', 'offerId']);
   }
 
   public async delete(
@@ -32,14 +32,14 @@ export class DefaultFavoriteService implements FavoriteService {
   public async findByUser(
     userId: string,
   ): Promise<DocumentType<FavoriteEntity>[]> {
-    return this.favoriteModel.find({ user: userId }).populate('offer').exec();
+    return this.favoriteModel.find({ user: userId }).populate('offerId').exec();
   }
 
   public async exists(dto: FavoriteDto): Promise<boolean> {
     return (
       (await this.favoriteModel.exists({
-        user: dto.userId,
-        offer: dto.offerId,
+        userId: dto.userId,
+        offerId: dto.offerId,
       })) !== null
     );
   }
