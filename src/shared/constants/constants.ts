@@ -4,7 +4,6 @@ export const MAX_RETURN_OFFERS_LIMIT = 60;
 export const DEFAULT_RETURN_PREMIUM_OFFERS_COUNT = 3;
 export const MAX_RETURN_PREMIUM_OFFERS_LIMIT = 3;
 
-export const DEFAULT_RETURN_COMMENTS_COUNT = 50;
 export const MAX_RETURN_COMMENTS_LIMIT = 50;
 
 export const FIRST_WEEK_DAY = 1;
@@ -61,3 +60,9 @@ export const MAX_TITLE_LENGTH = 100;
 
 export const MIN_DESCRIPTION_LENGTH = 20;
 export const MAX_DESCRIPTION_LENGTH = 1024;
+
+export const MIN_PASSWORD_LENGTH = 6;
+export const MAX_PASSWORD_LENGTH = 12;
+
+export const MIN_COMMENT_TEXT_LENGTH = 5;
+export const MAX_COMMENT_TEXT_LENGTH = 1024;

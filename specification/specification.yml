@@ -276,6 +276,37 @@ paths:
         "400":
           description: Указанный город не поддерживается.
 
+  /offers/{offerId}/comments:
+    get:
+      tags:
+        - offers
+      summary: Получение комментариев к объявлению.
+      description: Возвращает список из 50 (или меньше) последних комментариев к объявлению.
+
+      parameters:
+        - name: offerId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Количество возвращаемых комментариев.
+          schema:
+            type: number
+            minimum: 1
+            maximum: 50
+
+      responses:
+        "200":
+          description: Комментарии к объявлению.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/comment'
+
   /favorites:
     get:
       tags:
@@ -346,37 +377,7 @@ paths:
         "404":
           description: Объявление не найдено.
 
-  /offers/{offerId}/comments:
-    get:
-      tags:
-        - comments
-      summary: Получение комментариев к объявлению.
-      description: Возвращает список из 50 (или меньше) последних комментариев к объявлению.
-
-      parameters:
-        - name: offerId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: limit
-          in: query
-          description: Количество возвращаемых комментариев.
-          schema:
-            type: number
-            minimum: 1
-            maximum: 50
-
-      responses:
-        "200":
-          description: Комментарии к объявлению.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/comment'
-
+  /comments/{offerId}:
     post:
       tags:
         - comments

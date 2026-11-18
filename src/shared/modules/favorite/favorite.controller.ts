@@ -4,6 +4,7 @@ import {
   BaseController,
   HttpError,
   HttpMethod,
+  ValidateObjectIdMiddleware,
 } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
@@ -29,24 +30,26 @@ export class FavoriteController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Post,
       handler: this.create,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')],
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Delete,
       handler: this.delete,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')],
     });
   }
 
-  public async index(_req: Request, res: Response): Promise<void> {
-    const favorites = await this.favoriteService.findByUser(
-      '68ee44fb5eedf2ed1d053d3d',
-    ); // ToDo: передавать реального пользователя
+  public async index({ body }: Request, res: Response): Promise<void> {
+    const { userId } = body;
+    const favorites = await this.favoriteService.findByUser(userId);
     const responseData = fillDTO(OfferShortRdo, favorites);
     this.ok(res, responseData);
   }
 
-  public async create(req: Request, res: Response): Promise<void> {
-    const { offerId } = req.params;
+  public async create({ body, params }: Request, res: Response): Promise<void> {
+    const { userId } = body;
+    const { offerId } = params;
 
     const offerExists = await this.offerService.exists(offerId);
     if (!offerExists) {
@@ -57,12 +60,7 @@ export class FavoriteController extends BaseController {
       );
     }
 
-    const createData = {
-      offerId,
-      userId: '68ee4321dcd454f8dbf39c7e', // ToDo: передавать реального текущего пользователя
-    };
-
-    const exists = await this.favoriteService.exists(createData);
+    const exists = await this.favoriteService.exists(userId, offerId);
     if (exists) {
       throw new HttpError(
         StatusCodes.CONFLICT,
@@ -71,19 +69,15 @@ export class FavoriteController extends BaseController {
       );
     }
 
-    await this.favoriteService.create(createData);
+    await this.favoriteService.create(userId, offerId);
     this.ok(res, { message: 'Объявление добавлено в избранное.' });
   }
 
-  public async delete(req: Request, res: Response): Promise<void> {
-    const { offerId } = req.params;
+  public async delete({ body, params }: Request, res: Response): Promise<void> {
+    const { userId } = body;
+    const { offerId } = params;
 
-    const createData = {
-      offerId,
-      userId: '68ee4321dcd454f8dbf39c7e', // ToDo: передавать реального текущего пользователя
-    };
-
-    const exists = await this.favoriteService.exists(createData);
+    const exists = await this.favoriteService.exists(userId, offerId);
     if (!exists) {
       throw new HttpError(
         StatusCodes.CONFLICT,
@@ -92,7 +86,7 @@ export class FavoriteController extends BaseController {
       );
     }
 
-    await this.favoriteService.delete(createData);
+    await this.favoriteService.delete(userId, offerId);
     this.ok(res, { message: 'Объявление удалено из избранного.' });
   }
 }

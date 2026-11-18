@@ -1,34 +1,34 @@
 import { inject, injectable } from 'inversify';
 import { CommentService } from './comment-service.interface.js';
-import { Component } from '../../types/index.js';
+import { Component, SortType } from '../../types/index.js';
 import { DocumentType, types } from '@typegoose/typegoose';
 import { CommentEntity } from './comment.entity.js';
 import { CreateCommentDto } from './dto/create-comment.dto.js';
-import { OfferService } from '../offer/index.js';
+import { MAX_RETURN_COMMENTS_LIMIT } from '../../constants/constants.js';
 
 @injectable()
 export class DefaultCommentService implements CommentService {
   constructor(
     @inject(Component.CommentModel)
     private readonly commentModel: types.ModelType<CommentEntity>,
-    @inject(Component.OfferService) private readonly offerService: OfferService,
   ) {}
 
   public async create(
+    offerId: string,
     dto: CreateCommentDto,
   ): Promise<DocumentType<CommentEntity>> {
-    const comment = await this.commentModel.create(dto);
-
-    await this.offerService.recalculateRating(dto.offerId);
-    await this.offerService.incCommentCount(dto.offerId);
-
+    const comment = await this.commentModel.create({ ...dto, offerId });
     return comment.populate('userId');
   }
 
   public async findByOfferId(
     offerId: string,
   ): Promise<DocumentType<CommentEntity>[]> {
-    return this.commentModel.find({ offerId }).populate('userId');
+    return this.commentModel
+      .find({ offerId })
+      .populate('userId')
+      .sort({ postDate: SortType.Down })
+      .limit(MAX_RETURN_COMMENTS_LIMIT);
   }
 
   public async deleteByOfferId(offerId: string): Promise<number> {
