@@ -4,7 +4,9 @@ import {
   BaseController,
   HttpError,
   HttpMethod,
+  UploadFileMiddleware,
   ValidateDtoMiddleware,
+  ValidateObjectIdMiddleware,
 } from '../../libs/rest/index.js';
 import { Logger } from '../../libs/logger/index.js';
 import { Component } from '../../types/index.js';
@@ -50,6 +52,18 @@ export class UserController extends BaseController {
       path: '/status',
       method: HttpMethod.Get,
       handler: this.status,
+    });
+    this.addRoute({
+      path: '/:userId/avatar',
+      method: HttpMethod.Post,
+      handler: this.uploadAvatar,
+      middlewares: [
+        new ValidateObjectIdMiddleware('userId'),
+        new UploadFileMiddleware(
+          this.configService.get('UPLOAD_DIRECTORY'),
+          'avatar',
+        ),
+      ],
     });
   }
 
@@ -110,5 +124,11 @@ export class UserController extends BaseController {
       'Проверка статуса пока не реализована.',
       'UserController',
     );
+  }
+
+  public async uploadAvatar(req: Request, res: Response) {
+    this.created(res, {
+      filepath: req.file?.path,
+    });
   }
 }

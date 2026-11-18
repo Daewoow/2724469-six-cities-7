@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify';
 import { Request, Response } from 'express';
 import {
   BaseController,
+  DocumentExistsMiddleware,
   HttpError,
   HttpMethod,
   ValidateObjectIdMiddleware,
@@ -30,13 +31,19 @@ export class FavoriteController extends BaseController {
       path: '/:offerId',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')],
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Delete,
       handler: this.delete,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')],
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ],
     });
   }
 
@@ -50,15 +57,6 @@ export class FavoriteController extends BaseController {
   public async create({ body, params }: Request, res: Response): Promise<void> {
     const { userId } = body;
     const { offerId } = params;
-
-    const offerExists = await this.offerService.exists(offerId);
-    if (!offerExists) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Объявление с id «${offerId}» не найдено.`,
-        'FavoriteController',
-      );
-    }
 
     const exists = await this.favoriteService.exists(userId, offerId);
     if (exists) {
@@ -80,13 +78,13 @@ export class FavoriteController extends BaseController {
     const exists = await this.favoriteService.exists(userId, offerId);
     if (!exists) {
       throw new HttpError(
-        StatusCodes.CONFLICT,
-        `Объявление с id «${offerId}» не найдено.`,
+        StatusCodes.NOT_FOUND,
+        `Объявление с id «${offerId}» не найдено в избранном.`,
         'FavoriteController',
       );
     }
 
-    await this.favoriteService.delete(userId, offerId);
-    this.ok(res, { message: 'Объявление удалено из избранного.' });
+    const favorite = await this.favoriteService.delete(userId, offerId);
+    this.noContent(res, favorite);
   }
 }

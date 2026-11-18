@@ -37,3 +37,17 @@ GET http://localhost:5001/users/status HTTP/1.1
 Content-Type: application/json
 
 ###
+
+## Отправить изображение
+
+POST http://localhost:5001/users/62823cb2c5a64ce9f1b50eb6/avatar HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="avatar"; filename="screen.png"
+Content-Type: image/png
+
+< /Users/spider_net/Desktop/screen.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+##
